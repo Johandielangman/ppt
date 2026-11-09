@@ -1,0 +1,114 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "{{package_name}}"
+version = "0.1.0"
+description = '{{project_description}}'
+readme = "README.md"
+requires-python = ">={{python_versions[0]}}"
+license = "MIT"
+keywords = []
+authors = [{ name = "{{github_username}}", email = "{{contact_email}}" }]
+classifiers = ["Programming Language :: Python"]
+dependencies = []
+
+[dependency-groups]
+lint = ["ty", "ruff"]
+test = ["pytest", "pytest-cov", "pytest-pretty", "dirty-equals"]
+docs = ["zensical", "catppuccin-zensical", "mike", "mkdocstrings[python]"]
+release = ["git-cliff>=2.14.2"]
+dev = [
+    { include-group = "test" },
+    { include-group = "lint" },
+    { include-group = "docs" },
+    { include-group = "release" },
+]
+
+[project.urls]
+Changelog = "https://github.com/{{github_username}}/{{ package_name }}/blob/main/CHANGELOG.md"
+Documentation = "https://{{github_username.lower()}}.github.io/{{ package_name }}/"
+Issues = "https://github.com/{{github_username}}/{{ package_name }}/issues"
+Source = "https://github.com/{{github_username}}/{{ package_name }}"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/{{project_slug}}"]
+
+[tool.ty.environment]
+root = ["./src", "."]
+python = ".venv"
+
+[tool.ruff]
+line-length = 120
+indent-width = 4
+target-version = "py312"
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "B",
+    "I",
+    "FAST",
+    "A",
+    "C4",
+    "DTZ",
+    "ISC",
+    "ICN",
+    "LOG",
+    "PT",
+    "Q",
+    "RET",
+    "SIM",
+    "TID",
+    "ARG",
+    "PTH",
+    "N",
+    "PERF",
+    "RUF",
+]
+ignore = ["S101", "RUF100"]
+fixable = ["ALL"]
+unfixable = []
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.pytest.ini_options]
+addopts = [
+    "--import-mode=importlib",
+    "-rfExX",
+    "--durations=10",
+    "--durations-min=1",
+]
+minversion = "9.0"
+testpaths = ["tests"]
+markers = ["integration: marks tests that are integration tests"]
+
+[tool.coverage.run]
+source_pkgs = ["{{project_slug}}"]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
+show_missing = true
+
+[tool.uv.sources]
+# Zensical-compatible fork of mike (versioned docs); pinned to a commit via uv.lock
+mike = { git = "https://github.com/squidfunk/mike.git" }
