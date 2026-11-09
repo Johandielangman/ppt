@@ -1,10 +1,10 @@
 [project]
-site_url = "https://{{github_username}}.github.io/{{package_name}}/"
+site_url = "https://{{ github_username.lower() }}.github.io/{{ package_name }}/"
 site_name = "{{package_name}}"
-site_description = "{{description}}"
-site_author = "{{github_username}}"
+site_description = {{ project_description | tojson }}
+site_author = {{ project_author | tojson }}
 
-copyright = "Copyright &copy; 2026 {{github_username}}"
+copyright = {{ ("Copyright &copy; " ~ ("%Y" | strftime) ~ " " ~ project_author) | tojson }}
 
 repo_url = "https://github.com/{{github_username}}/{{package_name}}"
 repo_name = "{{package_name}}"

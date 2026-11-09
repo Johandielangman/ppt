@@ -1,3 +1,4 @@
+{% raw -%}
 name: Release
 run-name: Release (${{ inputs.bump }})
 
@@ -169,7 +170,7 @@ jobs:
     timeout-minutes: 10
     environment:
       name: pypi
-      url: https://pypi.org/project/ttl-cache-decorator/${{ needs.prepare.outputs.version }}/
+      url: https://pypi.org/project/{% endraw %}{{ package_name }}{% raw %}/${{ needs.prepare.outputs.version }}/
     permissions:
       id-token: write # trusted publishing + attestations
     steps:
@@ -220,3 +221,4 @@ jobs:
       contents: write
     with:
       version: ${{ needs.prepare.outputs.version }}
+{%- endraw %}

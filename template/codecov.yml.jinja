@@ -21,7 +21,7 @@ comment:
   layout: "condensed_header, diff, flags, files"
   require_changes: true
 
-# Wait for all 12 matrix uploads before reporting status.
+# Wait for all matrix uploads (OS x Python) before reporting status.
 codecov:
   notify:
-    after_n_builds: 12
+    after_n_builds: {{ supported_operating_systems | length * python_versions | length }}

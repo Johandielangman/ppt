@@ -1,3 +1,4 @@
+{% raw -%}
 name: CI
 
 on:
@@ -48,10 +49,11 @@ jobs:
       contents: read
     strategy:
       fail-fast: false
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ["3.12", "3.13", "3.14", "3.15"]
-    steps:
+      matrix:{% endraw %}
+{%- set runners = {"Windows": "windows-latest", "macOS": "macos-latest", "Linux": "ubuntu-latest"} %}
+        os: [{% for o in supported_operating_systems %}{{ runners[o] }}{{ ", " if not loop.last }}{% endfor %}]
+        python-version: {{ python_versions | tojson }}
+{% raw %}    steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
@@ -108,3 +110,4 @@ jobs:
       - name: Check job results
         if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
         run: exit 1
+{%- endraw %}

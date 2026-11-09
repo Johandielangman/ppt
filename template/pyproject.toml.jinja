@@ -5,13 +5,23 @@ build-backend = "hatchling.build"
 [project]
 name = "{{package_name}}"
 version = "0.1.0"
-description = '{{project_description}}'
+description = {{ project_description | tojson }}
 readme = "README.md"
 requires-python = ">={{python_versions[0]}}"
 license = "MIT"
 keywords = []
-authors = [{ name = "{{github_username}}", email = "{{contact_email}}" }]
-classifiers = ["Programming Language :: Python"]
+authors = [{ name = {{ project_author | tojson }}, email = "{{ contact_email }}" }]
+{%- set os_classifiers = {"Windows": "Microsoft :: Windows", "macOS": "MacOS", "Linux": "POSIX :: Linux"} %}
+classifiers = [
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+{%- for v in python_versions %}
+    "Programming Language :: Python :: {{ v }}",
+{%- endfor %}
+{%- for o in supported_operating_systems %}
+    "Operating System :: {{ os_classifiers[o] }}",
+{%- endfor %}
+]
 dependencies = []
 
 [dependency-groups]
@@ -42,7 +52,7 @@ python = ".venv"
 [tool.ruff]
 line-length = 120
 indent-width = 4
-target-version = "py312"
+target-version = "py{{ python_versions[0] | replace('.', '') }}"
 
 [tool.ruff.lint]
 select = [
